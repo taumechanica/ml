@@ -23,7 +23,7 @@ dependencies {
 
 jar {
     manifest {
-        attributes "Main-Class": "ml.HiThereKt"
+        attributes "Main-Class": "taumechanica.ml.HiThereKt"
     }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
