@@ -22,9 +22,5 @@ dependencies {
 }
 
 jar {
-    manifest {
-        attributes "Main-Class": "taumechanica.ml.HiThereKt"
-    }
-
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }

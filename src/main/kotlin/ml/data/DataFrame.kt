@@ -24,9 +24,11 @@ class DataFrame(
         }
 
         val indices = mutableListOf<Int>()
-        for (i in 0 until samples.size) if (subset[i]) indices.add(i)
+        for (i in 0 until samples.size) {
+            if (subset[i]) indices.add(i)
+        }
+        shuffle(indices)
 
-        val permutation = shuffle(indices)
         val first = DataFrame(target, features, samples, subset.copyOf(), null)
         val second = DataFrame(target, features, samples, subset.copyOf(), null)
         val size = Math.ceil(indices.size * ratio).toInt()
