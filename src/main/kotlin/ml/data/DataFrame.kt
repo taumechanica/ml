@@ -37,4 +37,19 @@ class DataFrame(
 
         return Pair(first, second)
     }
+
+    public fun cut(phi: (DoubleArray) -> Int): Pair<DataFrame, DataFrame> {
+        val first = DataFrame(target, features, samples, subset.copyOf(), null)
+        val second = DataFrame(target, features, samples, subset.copyOf(), null)
+
+        for (i in 0 until samples.size) if (subset[i]) {
+            if (phi(samples[i].values) > 0) {
+                first.subset[i] = false
+            } else {
+                second.subset[i] = false
+            }
+        }
+
+        return Pair(first, second)
+    }
 }

@@ -8,9 +8,9 @@ import java.io.InputStream
 import taumechanica.ml.data.*
 
 class Pipeline {
-    private var frame: DataFrame? = null
+    public var frame: DataFrame? = null
 
-    fun parse(source: InputStream, separator: String = ";"): Pipeline {
+    public fun parse(source: InputStream, separator: String = ";"): Pipeline {
         if (frame != null) throw Exception(
             "Data frame has been already initialized"
         )
