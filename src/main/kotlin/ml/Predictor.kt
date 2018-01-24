@@ -3,4 +3,6 @@
 
 package taumechanica.ml
 
-class Predictor(val predict: (DoubleArray) -> DoubleArray)
+interface Predictor {
+    fun predict(values: DoubleArray): DoubleArray
+}

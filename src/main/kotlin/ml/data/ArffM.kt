@@ -135,7 +135,7 @@ class ArffM(val separator: String) {
         attr.mostFrequent = bestCandidate
     }
 
-    public fun parse(source: InputStream): DataFrame {
+    fun parse(source: InputStream): DataFrame {
         section = "attributes"
 
         val scanner = Scanner(source)

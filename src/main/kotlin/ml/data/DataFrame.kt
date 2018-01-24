@@ -17,7 +17,7 @@ class DataFrame(
     val samples: Array<Sample>,
     val subset: BooleanArray
 ) {
-    public fun split(ratio: Double): Pair<DataFrame, DataFrame> {
+    fun split(ratio: Double): Pair<DataFrame, DataFrame> {
         if (ratio <= 0.0 || ratio > 1.0) {
             throw Exception("Invalid split ratio")
         }
@@ -37,7 +37,7 @@ class DataFrame(
         return Pair(first, second)
     }
 
-    public fun cut(phi: (DoubleArray) -> Int): Pair<DataFrame, DataFrame> {
+    fun cut(phi: (DoubleArray) -> Int): Pair<DataFrame, DataFrame> {
         val first = DataFrame(target, features, samples, subset.copyOf())
         val second = DataFrame(target, features, samples, subset.copyOf())
 
@@ -52,7 +52,7 @@ class DataFrame(
         return Pair(first, second)
     }
 
-    public fun weighSamples() {
+    fun weighSamples() {
         val size = subset.filter({ it }).size
         for (i in 0 until samples.size) if (subset[i]) {
             for (k in 0 until target.size) {
@@ -66,14 +66,14 @@ class DataFrame(
         }
     }
 
-    public fun weighFeatures(t: Int, η: Double, λ: Double) {
+    fun weighFeatures(t: Int, η: Double, λ: Double) {
         val m = features.size
         for (feature in features) feature.weight = Math.exp(
             η * λ / 3.0 * Math.sqrt(t.toDouble() / m)
         )
     }
 
-    public fun resetTargets() {
+    fun resetTargets() {
         for (i in 0 until samples.size) if (subset[i]) {
             for (k in 0 until target.size) {
                 samples[i].target!![k] = samples[i].actual!![k]
