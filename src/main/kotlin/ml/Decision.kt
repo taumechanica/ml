@@ -12,7 +12,7 @@ fun prob(scores: DoubleArray): DoubleArray {
         1.0 / (1.0 + Math.exp(-2.0 * scores[it]))
     })
     val sum = probabilities.sum()
-    for (k in 0 until probabilities.size) {
+    for (k in 0 until scores.size) {
         probabilities[k] /= sum
     }
     return probabilities

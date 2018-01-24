@@ -3,8 +3,6 @@
 
 package taumechanica.ml
 
-import java.util.Comparator
-
 import taumechanica.ml.data.*
 
 fun accuracy(frame: DataFrame, model: Predictor): Double {
@@ -42,30 +40,23 @@ fun gini(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Double 
         throw Exception("Could not calculate")
     }
 
-    class Row(val p: Double, val a: Double, val i: Int)
-
-    val values = mutableListOf<Row>()
+    val values = mutableListOf<DoubleArray>()
     for (i in 0 until frame.samples.size) if (frame.subset[i]) {
         val sample = frame.samples[i]
         val scores = model.predict(sample.values)
         val probabilities = if (calibrate) prob(scores) else scores
-        values.add(Row(probabilities[0], 0.5 * (sample.actual!![0] + 1.0), i))
+        values.add(doubleArrayOf(probabilities[0], 0.5 * (sample.actual!![0] + 1.0), i.toDouble()))
     }
 
     val g: (Int) -> Double = { by ->
         var losses = 0.0
-        val comparator = if (by == 0) {
-            Comparator.comparing(Row::p)
-        } else {
-            Comparator.comparing(Row::a)
-        }
-        val sorted = values.sortedWith(comparator.reversed().thenComparing(Row::i))
-        for (i in 0 until sorted.size) losses += sorted[i].a
+        val sorted = values.sortedWith(compareBy({ -it[by] }, { it[2] }))
+        for (row in sorted) losses += row[1]
 
         var cum = 0.0
         var sum = 0.0
-        for (i in 0 until sorted.size) {
-            cum += sorted[i].a / losses
+        for (row in sorted) {
+            cum += row[1] / losses
             sum += cum
         }
 

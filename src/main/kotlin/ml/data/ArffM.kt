@@ -180,8 +180,7 @@ class ArffM(val separator: String) {
             targetAttr as Attribute,
             features.toTypedArray(),
             samples.toTypedArray(),
-            BooleanArray(samples.size, { true }),
-            BooleanArray(samples.size, { false })
+            BooleanArray(samples.size, { true })
         )
     }
 }
