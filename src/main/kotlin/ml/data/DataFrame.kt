@@ -6,9 +6,9 @@ package taumechanica.ml.data
 import java.util.Collections.shuffle
 
 class Sample(val values: DoubleArray) {
-    var weight: DoubleArray? = null
-    var actual: DoubleArray? = null
-    var target: DoubleArray? = null
+    lateinit var weight: DoubleArray
+    lateinit var actual: DoubleArray
+    lateinit var target: DoubleArray
 }
 
 class DataFrame(
@@ -57,10 +57,10 @@ class DataFrame(
         for (i in 0 until samples.size) if (subset[i]) {
             for (k in 0 until target.size) {
                 val sample = samples[i]
-                if (sample.actual!![k] > 0.0) {
-                    sample.weight!![k] = 1.0 / (2.0 * size)
+                if (sample.actual[k] > 0.0) {
+                    sample.weight[k] = 1.0 / (2.0 * size)
                 } else {
-                    sample.weight!![k] = 1.0 / (2.0 * (size * (target.size - 1.0)))
+                    sample.weight[k] = 1.0 / (2.0 * (size * (target.size - 1.0)))
                 }
             }
         }
@@ -76,7 +76,7 @@ class DataFrame(
     fun resetTargets() {
         for (i in 0 until samples.size) if (subset[i]) {
             for (k in 0 until target.size) {
-                samples[i].target!![k] = samples[i].actual!![k]
+                samples[i].target[k] = samples[i].actual[k]
             }
         }
     }

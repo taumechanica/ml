@@ -7,8 +7,8 @@ import taumechanica.ml.Predictor
 import taumechanica.ml.data.DataFrame
 
 class HConst : Predictor {
-    var alpha = 0.0
-    var gamma = 0.0
+    val alpha: Double
+    val gamma: Double
 
     val edge: DoubleArray
     val votes: DoubleArray
@@ -20,15 +20,17 @@ class HConst : Predictor {
         for (i in 0 until frame.samples.size) if (frame.subset[i]) {
             val sample = frame.samples[i]
             for (k in 0 until frame.target.size) {
-                edge[k] += sample.weight!![k] * sample.target!![k]
+                edge[k] += sample.weight[k] * sample.target[k]
             }
         }
 
+        var sum = 0.0
         for (k in 0 until frame.target.size) {
-            gamma += Math.abs(edge[k])
+            sum += Math.abs(edge[k])
             votes[k] = if (edge[k] > 0.0) 1.0 else -1.0
         }
 
+        gamma = sum
         alpha = 0.5 * Math.log((1.0 + gamma) / (1.0 - gamma))
     }
 

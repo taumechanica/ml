@@ -12,7 +12,7 @@ fun accuracy(frame: DataFrame, model: Predictor): Double {
     for (i in 0 until frame.samples.size) if (frame.subset[i]) {
         val sample = frame.samples[i]
         val scores = model.predict(sample.values)
-        val decision = argmax(domain!!, scores)
+        val decision = argmax(domain, scores)
         if (decision == sample.values[frame.target.index]) correct++
         total++
     }
@@ -27,7 +27,7 @@ fun logloss(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Doub
         val scores = model.predict(sample.values)
         val probabilities = if (calibrate) prob(scores) else scores
         for ((k, p) in probabilities.withIndex()) {
-            logloss += 0.5 * (sample.actual!![k] + 1.0) * Math.log(Math.max(Math.min(p, 1.0 - 1E-15), 1E-15))
+            logloss += 0.5 * (sample.actual[k] + 1.0) * Math.log(Math.max(Math.min(p, 1.0 - 1E-15), 1E-15))
         }
         total++
     }
@@ -36,7 +36,7 @@ fun logloss(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Doub
 
 fun gini(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Double {
     val domain = (frame.target as NominalAttribute).domain
-    if (domain!!.size != 2) {
+    if (domain.size != 2) {
         throw Exception("Could not calculate")
     }
 
@@ -45,7 +45,7 @@ fun gini(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Double 
         val sample = frame.samples[i]
         val scores = model.predict(sample.values)
         val probabilities = if (calibrate) prob(scores) else scores
-        values.add(doubleArrayOf(probabilities[0], 0.5 * (sample.actual!![0] + 1.0), i.toDouble()))
+        values.add(doubleArrayOf(probabilities[0], 0.5 * (sample.actual[0] + 1.0), i.toDouble()))
     }
 
     val g: (Int) -> Double = { by ->

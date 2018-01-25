@@ -7,8 +7,10 @@ import java.io.InputStream
 import java.util.Scanner
 
 class ArffM(val separator: String) {
-    private var section: String? = null
-    private var targetAttr: Attribute? = null
+    private var section = "attributes"
+
+    private lateinit var targetAttr: Attribute
+
     private var attrCounter = -1
     private val attrIndices = mutableMapOf<Int, Int>()
     private val features = mutableListOf<Attribute>()
@@ -38,14 +40,14 @@ class ArffM(val separator: String) {
 
         val parts = line.removePrefix("@attribute ").split(" ")
         val isTarget = parts.size > 2 && parts[2] == "target"
-        if (isTarget && targetAttr != null) {
+        if (isTarget && ::targetAttr.isInitialized) {
             throw Exception("Multiple targets does not supported")
         }
 
         attrCounter++
 
         var index = features.size
-        if (targetAttr != null) index += 1
+        if (::targetAttr.isInitialized) index += 1
 
         val attr = when (parts[1]) {
             "nominal" -> NominalAttribute(index, parts[0])
@@ -74,12 +76,10 @@ class ArffM(val separator: String) {
             }
         }
 
-        targetAttr?.let {
-            values[it.index] = if (it is NominalAttribute) {
-                encode(it.index, parts[attrIndices[it.index] as Int])
-            } else {
-                parts[attrIndices[it.index] as Int].toDouble()
-            }
+        values[targetAttr.index] = if (targetAttr is NominalAttribute) {
+            encode(targetAttr.index, parts[attrIndices[targetAttr.index] as Int])
+        } else {
+            parts[attrIndices[targetAttr.index] as Int].toDouble()
         }
 
         samples.add(Sample(values))
@@ -136,14 +136,12 @@ class ArffM(val separator: String) {
     }
 
     fun parse(source: InputStream): DataFrame {
-        section = "attributes"
-
         val scanner = Scanner(source)
         while (scanner.hasNextLine()) {
             parseLine(scanner.nextLine().trim())
         }
 
-        if (targetAttr == null) {
+        if (!::targetAttr.isInitialized) {
             throw Exception("Target attribute not found")
         }
 
@@ -157,18 +155,18 @@ class ArffM(val separator: String) {
         }
 
         for (sample in samples) {
-            val weight = DoubleArray(targetAttr!!.size)
-            val actual = DoubleArray(targetAttr!!.size)
-            val target = DoubleArray(targetAttr!!.size)
+            val weight = DoubleArray(targetAttr.size)
+            val actual = DoubleArray(targetAttr.size)
+            val target = DoubleArray(targetAttr.size)
             if (targetAttr is NominalAttribute) {
-                val value = sample.values[targetAttr!!.index]
+                val value = sample.values[targetAttr.index]
                 val domain = (targetAttr as NominalAttribute).domain
-                for (k in 0 until targetAttr!!.size) {
-                    actual[k] = if (value == domain!![k]) 1.0 else -1.0
+                for (k in 0 until targetAttr.size) {
+                    actual[k] = if (value == domain[k]) 1.0 else -1.0
                     target[k] = actual[k]
                 }
             } else {
-                actual[0] = sample.values[targetAttr!!.index]
+                actual[0] = sample.values[targetAttr.index]
                 target[0] = actual[0]
             }
             sample.weight = weight
@@ -177,7 +175,7 @@ class ArffM(val separator: String) {
         }
 
         return DataFrame(
-            targetAttr as Attribute,
+            targetAttr,
             features.toTypedArray(),
             samples.toTypedArray(),
             BooleanArray(samples.size, { true })
