@@ -5,6 +5,8 @@ package taumechanica.ml.data
 
 import java.util.Collections.shuffle
 
+import kotlin.math.*
+
 class Sample(val values: DoubleArray) {
     lateinit var weight: DoubleArray
     lateinit var actual: DoubleArray
@@ -30,7 +32,7 @@ class DataFrame(
 
         val first = DataFrame(target, features, samples, subset.copyOf())
         val second = DataFrame(target, features, samples, subset.copyOf())
-        val size = Math.ceil(indices.size * ratio).toInt()
+        val size = ceil(indices.size * ratio).toInt()
         for (i in indices.size - size + 1 until indices.size) first.subset[i] = false
         for (i in 0 until size) second.subset[i] = false
 
@@ -68,8 +70,8 @@ class DataFrame(
 
     fun weighFeatures(t: Int, η: Double, λ: Double) {
         val m = features.size
-        for (feature in features) feature.weight = Math.exp(
-            η * λ / 3.0 * Math.sqrt(t.toDouble() / m)
+        for (feature in features) feature.weight = exp(
+            η * λ / 3.0 * sqrt(t.toDouble() / m)
         )
     }
 

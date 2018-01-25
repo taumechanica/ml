@@ -3,13 +3,15 @@
 
 package taumechanica.ml
 
+import kotlin.math.exp
+
 fun argmax(domain: DoubleArray, scores: DoubleArray): Double {
     return domain[scores.withIndex().maxBy { it.value }!!.index]
 }
 
 fun prob(scores: DoubleArray): DoubleArray {
     val probabilities = DoubleArray(scores.size, {
-        1.0 / (1.0 + Math.exp(-2.0 * scores[it]))
+        1.0 / (1.0 + exp(-2.0 * scores[it]))
     })
     val sum = probabilities.sum()
     for (k in 0 until scores.size) {

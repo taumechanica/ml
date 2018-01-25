@@ -3,6 +3,8 @@
 
 package taumechanica.ml.base
 
+import kotlin.math.*
+
 import taumechanica.ml.Predictor
 import taumechanica.ml.data.DataFrame
 
@@ -26,12 +28,12 @@ class HConst : Predictor {
 
         var sum = 0.0
         for (k in 0 until frame.target.size) {
-            sum += Math.abs(edge[k])
+            sum += abs(edge[k])
             votes[k] = if (edge[k] > 0.0) 1.0 else -1.0
         }
 
         gamma = sum
-        alpha = 0.5 * Math.log((1.0 + gamma) / (1.0 - gamma))
+        alpha = 0.5 * ln((1.0 + gamma) / (1.0 - gamma))
     }
 
     override fun predict(values: DoubleArray): DoubleArray {
