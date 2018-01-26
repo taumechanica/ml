@@ -7,16 +7,17 @@ import java.util.Random
 
 import kotlin.math.*
 
-import taumechanica.ml.Predictor
+import taumechanica.ml.Classifier
 import taumechanica.ml.data.*
 
-class HIndicator : Predictor {
-    val alpha: Double
-    val gamma: Double
+class HIndicator : Classifier {
+    override val alpha: Double
+    override val gamma: Double
+
+    override val votes: DoubleArray
 
     val index: Int
     val value: DoubleArray
-    val votes: DoubleArray
 
     constructor(frame: DataFrame, attr: Attribute) {
         if (attr !is NominalAttribute) {
@@ -77,5 +78,5 @@ class HIndicator : Predictor {
         return DoubleArray(votes.size, { alpha * votes[it] * phi })
     }
 
-    fun phi(values: DoubleArray) = value[values[index].toInt()].toInt()
+    override fun phi(values: DoubleArray) = value[values[index].toInt()].toInt()
 }

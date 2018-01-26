@@ -5,15 +5,16 @@ package taumechanica.ml.base
 
 import kotlin.math.*
 
-import taumechanica.ml.Predictor
+import taumechanica.ml.Classifier
 import taumechanica.ml.data.DataFrame
 
-class HConst : Predictor {
-    val alpha: Double
-    val gamma: Double
+class HConst : Classifier {
+    override val alpha: Double
+    override val gamma: Double
+
+    override val votes: DoubleArray
 
     val edge: DoubleArray
-    val votes: DoubleArray
 
     constructor(frame: DataFrame) {
         edge = DoubleArray(frame.target.size, { 0.0 })
@@ -41,5 +42,5 @@ class HConst : Predictor {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun phi(values: DoubleArray) = 1
+    override fun phi(values: DoubleArray) = 1
 }

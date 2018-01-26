@@ -5,16 +5,17 @@ package taumechanica.ml.base
 
 import kotlin.math.*
 
-import taumechanica.ml.Predictor
+import taumechanica.ml.Classifier
 import taumechanica.ml.data.*
 
-class HStump : Predictor {
-    val alpha: Double
-    val gamma: Double
+class HStump : Classifier {
+    override val alpha: Double
+    override val gamma: Double
+
+    override val votes: DoubleArray
 
     val index: Int
     val value: DoubleArray
-    val votes: DoubleArray
 
     constructor(frame: DataFrame, attr: Attribute, baseline: DoubleArray) {
         if (attr !is NumericAttribute) {
@@ -107,5 +108,5 @@ class HStump : Predictor {
         return DoubleArray(votes.size, { alpha * votes[it] * phi })
     }
 
-    fun phi(values: DoubleArray) = if (values[index] > value[0]) 1 else -1
+    override fun phi(values: DoubleArray) = if (values[index] > value[0]) 1 else -1
 }
