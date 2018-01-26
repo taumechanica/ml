@@ -14,11 +14,9 @@ class HIndicator : Predictor {
     val alpha: Double
     val gamma: Double
 
-    val edge: DoubleArray
-    val votes: DoubleArray
-
     val index: Int
     val value: DoubleArray
+    val votes: DoubleArray
 
     constructor(frame: DataFrame, attr: Attribute) {
         if (attr !is NominalAttribute) {
@@ -28,14 +26,13 @@ class HIndicator : Predictor {
         val domain = attr.domain
         val random = Random()
 
-        edge = DoubleArray(frame.target.size * domain.size, { 0.0 })
-        votes = DoubleArray(frame.target.size, { 0.0 })
-
         index = attr.index
         value = DoubleArray(domain.size, {
             if (random.nextDouble() > 0.5) 1.0 else -1.0
         })
+        votes = DoubleArray(frame.target.size, { 0.0 })
 
+        val edge = DoubleArray(frame.target.size * domain.size, { 0.0 })
         for (i in 0 until frame.samples.size) if (frame.subset[i]) {
             val sample = frame.samples[i]
             for (k in 0 until frame.target.size) {

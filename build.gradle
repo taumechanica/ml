@@ -20,7 +20,3 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
-
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
