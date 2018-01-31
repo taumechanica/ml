@@ -3,7 +3,7 @@
 
 package taumechanica.ml
 
-class Ensemble : Predictor {
+open class Ensemble : Predictor {
     val predictors: Array<Predictor?>
 
     private val size: Int
