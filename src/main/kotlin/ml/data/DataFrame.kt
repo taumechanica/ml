@@ -87,10 +87,10 @@ class DataFrame(
         }
     }
 
-    fun weighFeatures(t: Int, η: Double, λ: Double) {
+    fun weighFeatures(size: Int, eta: Double, lambda: Double) {
         val m = features.size
         for (feature in features) feature.weight = exp(
-            η * λ / 3.0 * sqrt(t.toDouble() / m)
+            eta * lambda / 3.0 * sqrt(size.toDouble() / m)
         )
     }
 

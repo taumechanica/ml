@@ -7,12 +7,13 @@ import taumechanica.ml.*
 import taumechanica.ml.base.*
 import taumechanica.ml.data.*
 
-class Full : Strategy {
+class HFull : Strategy {
     override fun init(frame: DataFrame) { }
 
     override fun fit(frame: DataFrame): Classifier {
         val hconst = HConst(frame)
         var result = hconst as Classifier
+
         for (feature in frame.features) {
             val candidate = when (feature) {
                 is NominalAttribute -> HIndicator(frame, feature)
@@ -23,6 +24,7 @@ class Full : Strategy {
                 if (candidate.gamma > result.gamma) result = candidate
             }
         }
+
         return result
     }
 }
