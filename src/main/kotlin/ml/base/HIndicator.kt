@@ -3,7 +3,7 @@
 
 package taumechanica.ml.base
 
-import java.util.Random
+import java.util.concurrent.ThreadLocalRandom
 
 import kotlin.math.*
 
@@ -25,7 +25,7 @@ class HIndicator : Classifier {
         }
 
         val domain = attr.domain
-        val random = Random()
+        val random = ThreadLocalRandom.current()
 
         index = attr.index
         value = DoubleArray(domain.size, {

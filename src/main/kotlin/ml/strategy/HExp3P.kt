@@ -3,7 +3,7 @@
 
 package taumechanica.ml.strategy
 
-import java.util.Random
+import java.util.concurrent.ThreadLocalRandom
 
 import kotlin.math.*
 
@@ -47,7 +47,7 @@ class HExp3P(
 
         var left = 0
         var right = m
-        val r = Random().nextDouble() * sum
+        val r = ThreadLocalRandom.current().nextDouble() * sum
         while (right - left > 1) {
             val mid = (left + right) / 2
             if (cdf[mid] > r) right = mid

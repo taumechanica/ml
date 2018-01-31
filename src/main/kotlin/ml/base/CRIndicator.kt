@@ -3,7 +3,7 @@
 
 package taumechanica.ml.base
 
-import java.util.Random
+import java.util.concurrent.ThreadLocalRandom
 
 import taumechanica.ml.BinaryClassifier
 import taumechanica.ml.data.*
@@ -18,7 +18,7 @@ class CRIndicator : BinaryClassifier {
         }
 
         val domain = attr.domain
-        val random = Random()
+        val random = ThreadLocalRandom.current()
 
         index = attr.index
         value = DoubleArray(domain.size, {
