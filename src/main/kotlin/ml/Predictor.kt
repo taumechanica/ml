@@ -7,11 +7,13 @@ interface Predictor {
     fun predict(values: DoubleArray): DoubleArray
 }
 
-interface Classifier : Predictor {
+interface BinaryClassifier {
+    fun phi(values: DoubleArray): Int
+}
+
+interface Classifier : Predictor, BinaryClassifier {
     val alpha: Double
     val gamma: Double
 
     val votes: DoubleArray
-
-    fun phi(values: DoubleArray): Int
 }

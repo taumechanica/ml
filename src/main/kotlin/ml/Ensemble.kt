@@ -19,7 +19,7 @@ open class Ensemble : Predictor {
             "sum" -> ::sum
             "avg" -> ::avg
             else -> throw Exception(
-                "Unknown compose method"
+                "Unknown composition method"
             )
         }
     }
