@@ -29,7 +29,7 @@ fun logloss(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Doub
         val scores = model.predict(sample.values)
         val probabilities = if (calibrate) prob(scores) else scores
         for ((k, p) in probabilities.withIndex()) {
-            logloss += 0.5 * (sample.actual[k] + 1.0) * log2(max(min(p, 1.0 - 1E-15), 1E-15))
+            logloss += 0.5 * (sample.actual[k] + 1.0) * ln(max(min(p, 1.0 - 1E-15), 1E-15))
         }
         total++
     }
