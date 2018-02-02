@@ -10,14 +10,6 @@ import kotlin.math.ln
 import taumechanica.ml.*
 import taumechanica.ml.data.DataFrame
 
-private class QueueItem(
-    val classifier: Classifier,
-    val frame: DataFrame,
-    val priority: Double,
-    val parent: Int,
-    val direction: Int
-)
-
 class HTree : Classifier {
     override val alpha: Double
     override val gamma: Double
@@ -35,10 +27,10 @@ class HTree : Classifier {
 
         votes = DoubleArray(frame.target.size, { 0.0 })
 
-        val queue = PriorityQueue<QueueItem>(0, compareBy({ it.priority }))
+        val queue = PriorityQueue<HQueueItem>(0, compareBy({ it.priority }))
 
         var classifier = strategy.fit(frame)
-        queue.add(QueueItem(classifier, frame, classifier.gamma, -1, 0))
+        queue.add(HQueueItem(classifier, frame, classifier.gamma, -1, 0))
 
         var iteration = 0
         var result = 0.0
@@ -63,10 +55,10 @@ class HTree : Classifier {
             val (neg, pos) = item.frame.cut(item.classifier)
             for (direction in intArrayOf(-1, 1)) {
                 val cut = if (direction < 0) neg else pos
-                classifier = strategy.fit(cut.first)
+                classifier = strategy.fit(cut)
 
-                val priority = classifier.gamma - cut.second
-                queue.add(QueueItem(classifier, cut.first, priority, iteration, direction))
+                val priority = classifier.gamma - edge(cut, item.classifier)
+                queue.add(HQueueItem(classifier, cut, priority, iteration, direction))
             }
 
             iteration++
@@ -102,4 +94,24 @@ class HTree : Classifier {
 
     @Suppress("UNUSED_PARAMETER")
     override fun phi(values: DoubleArray) = 0
+}
+
+private class HQueueItem(
+    val classifier: Classifier,
+    val frame: DataFrame,
+    val priority: Double,
+    val parent: Int,
+    val direction: Int
+)
+
+private fun edge(frame: DataFrame, classifier: Classifier): Double {
+    var result = 0.0
+    for (i in 0 until frame.samples.size) if (frame.subset[i]) {
+        val sample = frame.samples[i]
+        val phi = classifier.phi(sample.values)
+        for (k in 0 until frame.target.size) {
+            result += sample.weight[k] * classifier.votes[k] * phi * sample.target[k]
+        }
+    }
+    return result
 }

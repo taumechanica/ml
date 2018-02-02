@@ -7,7 +7,7 @@ import java.util.Collections.shuffle
 
 import kotlin.math.*
 
-import taumechanica.ml.Classifier
+import taumechanica.ml.BinaryClassifier
 
 class Sample(val values: DoubleArray) {
     lateinit var weight: DoubleArray
@@ -41,36 +41,20 @@ class DataFrame(
         return Pair(first, second)
     }
 
-    fun cut(classifier: Classifier): Pair<
-        Pair<DataFrame, Double>,
-        Pair<DataFrame, Double>
-    > {
-        var firstEdge = 0.0
-        var secondEdge = 0.0
-
+    fun cut(classifier: BinaryClassifier): Pair<DataFrame, DataFrame> {
         val first = DataFrame(target, features, samples, subset.copyOf())
         val second = DataFrame(target, features, samples, subset.copyOf())
 
         for (i in 0 until samples.size) if (subset[i]) {
             val sample = samples[i]
-            val phi = classifier.phi(sample.values)
-            if (phi > 0) {
+            if (classifier.phi(sample.values) > 0) {
                 first.subset[i] = false
-                for (k in 0 until target.size) {
-                    secondEdge += sample.weight[k] * classifier.votes[k] * sample.target[k]
-                }
             } else {
                 second.subset[i] = false
-                for (k in 0 until target.size) {
-                    firstEdge -= sample.weight[k] * classifier.votes[k] * sample.target[k]
-                }
             }
         }
 
-        return Pair(
-            Pair(first, firstEdge),
-            Pair(second, secondEdge)
-        )
+        return Pair(first, second)
     }
 
     fun weighSamples() {
