@@ -27,7 +27,7 @@ class HTree : Classifier {
 
         votes = DoubleArray(frame.target.size, { 0.0 })
 
-        val queue = PriorityQueue<HQueueItem>(0, compareBy({ it.priority }))
+        val queue = PriorityQueue<HQueueItem>(1, compareBy({ it.priority }))
 
         var classifier = strategy.fit(frame)
         queue.add(HQueueItem(classifier, frame, classifier.gamma, -1, 0))
