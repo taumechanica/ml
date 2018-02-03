@@ -35,8 +35,13 @@ class DataFrame(
         val first = DataFrame(target, features, samples, subset.copyOf())
         val second = DataFrame(target, features, samples, subset.copyOf())
         val size = ceil(indices.size * ratio).toInt()
-        for (i in indices.size - size + 1 until indices.size) first.subset[i] = false
-        for (i in 0 until size) second.subset[i] = false
+        for (i in 0 until indices.size) {
+            if (i < size) {
+                second.subset[indices[i]] = false
+            } else {
+                first.subset[indices[i]] = false
+            }
+        }
 
         return Pair(first, second)
     }
