@@ -12,19 +12,15 @@ class CRStump : BinaryClassifier {
     val index: Int
     val value: DoubleArray
 
-    constructor(frame: DataFrame, attr: Attribute) {
+    constructor(attr: Attribute) {
         if (attr !is NumericAttribute) {
             throw Exception("Unexpected attribute type")
         }
 
         index = attr.index
-        value = doubleArrayOf(0.0)
-
-        val indices = mutableListOf<Int>()
-        for (i in attr.order) if (frame.subset[i]) indices.add(i)
-
-        val i = ThreadLocalRandom.current().nextInt(0, indices.size)
-        value[0] = frame.samples[indices[i]].values[index]
+        value = doubleArrayOf(
+            ThreadLocalRandom.current().nextDouble(attr.minValue, attr.maxValue)
+        )
     }
 
     override fun phi(values: DoubleArray) = if (values[index] > value[0]) 1 else -1
