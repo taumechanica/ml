@@ -156,26 +156,6 @@ class ArffM(val separator: String) {
             fillDomain(targetAttr as NominalAttribute)
         }
 
-        for (sample in samples) {
-            val weight = DoubleArray(targetAttr.size)
-            val actual = DoubleArray(targetAttr.size)
-            val target = DoubleArray(targetAttr.size)
-            if (targetAttr is NominalAttribute) {
-                val value = sample.values[targetAttr.index]
-                val domain = (targetAttr as NominalAttribute).domain
-                for (k in 0 until targetAttr.size) {
-                    actual[k] = if (value == domain[k]) 1.0 else -1.0
-                    target[k] = actual[k]
-                }
-            } else {
-                actual[0] = sample.values[targetAttr.index]
-                target[0] = actual[0]
-            }
-            sample.weight = weight
-            sample.actual = actual
-            sample.target = target
-        }
-
         return DataFrame(
             targetAttr,
             features.toTypedArray(),
