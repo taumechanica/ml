@@ -15,18 +15,13 @@ class Sample(val values: DoubleArray) {
     lateinit var weight: DoubleArray
 }
 
-class DataFrame {
-    val target: Attribute
-    val features: Array<Attribute>
-    val samples: Array<Sample>
+class DataFrame(
+    val target: Attribute,
+    val features: Array<Attribute>,
+    val samples: Array<Sample>,
     val subset: BooleanArray
-
-    constructor(
-        target: Attribute,
-        features: Array<Attribute>,
-        samples: Array<Sample>,
-        subset: BooleanArray
-    ) {
+) {
+    fun initialize() {
         for (sample in samples) {
             if (target is NominalAttribute) {
                 val value = sample.values[target.index]
@@ -39,11 +34,6 @@ class DataFrame {
             sample.target = sample.actual.copyOf()
             sample.weight = DoubleArray(target.size)
         }
-
-        this.target = target
-        this.features = features
-        this.samples = samples
-        this.subset = subset
     }
 
     fun split(ratio: Double): Pair<DataFrame, DataFrame> {

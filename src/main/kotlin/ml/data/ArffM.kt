@@ -156,11 +156,13 @@ class ArffM(val separator: String) {
             fillDomain(targetAttr as NominalAttribute)
         }
 
-        return DataFrame(
+        val frame = DataFrame(
             targetAttr,
             features.toTypedArray(),
             samples.toTypedArray(),
             BooleanArray(samples.size, { true })
         )
+        frame.initialize()
+        return frame
     }
 }

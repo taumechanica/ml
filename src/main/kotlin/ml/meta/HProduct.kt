@@ -25,13 +25,8 @@ class HProduct : Classifier {
 
         frame.resetTargets()
 
-        val indices = mutableListOf<Int>()
-        for (i in 0 until frame.samples.size) {
-            if (frame.subset[i]) indices.add(i)
-        }
-
         var j = 0
-        var bestAlpha = 0.0
+        var bestAlpha = 1.0
         var bestGamma = 0.0
         while (true) {
             for (k in 0 until frame.target.size) votes[k] = 1.0
@@ -41,9 +36,10 @@ class HProduct : Classifier {
                 }
             }
 
-            for (i in indices) {
+            for (i in 0 until frame.samples.size) if (frame.subset[i]) {
                 val sample = frame.samples[i]
-                val numerator = predict(sample.values)
+                val phi = phi(sample.values)
+                val numerator = DoubleArray(votes.size, { bestAlpha * votes[it] * phi })
                 val denominator = factors[j].predict(sample.values)
                 for (k in 0 until frame.target.size) {
                     sample.target[k] = sample.actual[k] * (

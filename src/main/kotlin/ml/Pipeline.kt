@@ -43,6 +43,7 @@ class Pipeline {
         val samples = frame!!.samples.map { sample -> Sample(
             encoder.encode(sample.values, frame!!.target.index)
         ) }
+        frame!!.target.index = size
 
         @Suppress("UNCHECKED_CAST")
         frame = DataFrame(
@@ -51,7 +52,7 @@ class Pipeline {
             samples.toTypedArray(),
             BooleanArray(samples.size, { true })
         )
-        frame!!.target.index = size
+        frame!!.initialize()
         encoders!!.add(encoder)
 
         return this
