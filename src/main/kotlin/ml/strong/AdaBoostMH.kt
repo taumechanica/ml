@@ -7,7 +7,7 @@ import kotlin.math.*
 
 import taumechanica.ml.*
 import taumechanica.ml.data.DataFrame
-import taumechanica.ml.meta.*
+import taumechanica.ml.meta.HTree
 
 class AdaBoostMH : Ensemble {
     constructor(
@@ -22,7 +22,6 @@ class AdaBoostMH : Ensemble {
         )
 
         val fit: (DataFrame) -> Classifier = when (meta) {
-            "product" -> { df -> HProduct(df, strategy, complexity) }
             "tree" -> { df -> HTree(df, strategy, complexity) }
             else -> { df -> strategy.fit(df) }
         }

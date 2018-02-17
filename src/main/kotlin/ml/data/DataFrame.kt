@@ -97,12 +97,4 @@ class DataFrame(
             eta * lambda / 3.0 * sqrt(size.toDouble() / m)
         )
     }
-
-    fun resetTargets() {
-        for (i in 0 until samples.size) if (subset[i]) {
-            for (k in 0 until target.size) {
-                samples[i].target[k] = samples[i].actual[k]
-            }
-        }
-    }
 }

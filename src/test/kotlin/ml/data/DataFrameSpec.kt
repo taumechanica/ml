@@ -101,28 +101,4 @@ object DataFrameSpec : Spek({
             assertEquals("%.2f".format(threeValueFrame.samples.map { it.weight.sum() }.sum()), "1.00")
         }
     }
-
-    on("resetTargets") {
-        it("should reset target vectors to actual vectors") {
-            twoValueFrame.samples[0].target = doubleArrayOf(-1.0, 1.0)
-            twoValueFrame.samples[1].target = doubleArrayOf(1.0, -1.0)
-            twoValueFrame.samples[2].target = doubleArrayOf(-1.0, 1.0)
-            twoValueFrame.samples[3].target = doubleArrayOf(1.0, -1.0)
-            twoValueFrame.samples[4].target = doubleArrayOf(-1.0, 1.0)
-
-            assertFalse(twoValueFrame.samples[0].target contentEquals twoValueFrame.samples[0].actual)
-            assertFalse(twoValueFrame.samples[1].target contentEquals twoValueFrame.samples[1].actual)
-            assertFalse(twoValueFrame.samples[2].target contentEquals twoValueFrame.samples[2].actual)
-            assertFalse(twoValueFrame.samples[3].target contentEquals twoValueFrame.samples[3].actual)
-            assertFalse(twoValueFrame.samples[4].target contentEquals twoValueFrame.samples[4].actual)
-
-            twoValueFrame.resetTargets()
-
-            assertTrue(twoValueFrame.samples[0].target contentEquals twoValueFrame.samples[0].actual)
-            assertTrue(twoValueFrame.samples[1].target contentEquals twoValueFrame.samples[1].actual)
-            assertTrue(twoValueFrame.samples[2].target contentEquals twoValueFrame.samples[2].actual)
-            assertTrue(twoValueFrame.samples[3].target contentEquals twoValueFrame.samples[3].actual)
-            assertTrue(twoValueFrame.samples[4].target contentEquals twoValueFrame.samples[4].actual)
-        }
-    }
 })
