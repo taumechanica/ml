@@ -134,6 +134,7 @@ class ArffM(val separator: String) {
         attr.order = order
         attr.minValue = samples[order[0]].values[attr.index]
         attr.maxValue = samples[order[order.size - 1]].values[attr.index]
+        attr.valueRange = attr.maxValue - attr.minValue
         attr.mostFrequent = bestCandidate
     }
 

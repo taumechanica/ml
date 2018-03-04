@@ -16,5 +16,6 @@ class NumericAttribute(index: Int, name: String) : Attribute(index, name) {
     lateinit var order: IntArray
     var minValue = 0.0
     var maxValue = 0.0
+    var valueRange = 0.0
     var mostFrequent = 0.0
 }

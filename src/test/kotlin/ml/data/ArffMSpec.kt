@@ -28,6 +28,9 @@ object ArffMSpec : Spek({
 
             val x1 = frame.features[0] as NumericAttribute
             assertTrue(x1.order contentEquals intArrayOf(3, 4, 0, 1, 5, 2))
+            assertEquals(x1.minValue, 0.0)
+            assertEquals(x1.maxValue, 2.1)
+            assertEquals(x1.valueRange, 2.1)
             assertEquals(x1.mostFrequent, 1.6)
 
             assertEquals(frame.features[1].name, "x2")

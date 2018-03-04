@@ -97,4 +97,16 @@ class DataFrame(
             eta * lambda / 3.0 * sqrt(size.toDouble() / m)
         )
     }
+
+    fun distance(first: DoubleArray, second: DoubleArray): Double {
+        var sum = 0.0
+        for (feature in features) {
+            sum += when (feature) {
+                is NominalAttribute -> if (first[feature.index] == second[feature.index]) 0.0 else 1.0
+                is NumericAttribute -> abs(first[feature.index] - second[feature.index]) / feature.valueRange
+                else -> 0.0
+            }
+        }
+        return sum
+    }
 }

@@ -101,4 +101,15 @@ object DataFrameSpec : Spek({
             assertEquals("%.2f".format(threeValueFrame.samples.map { it.weight.sum() }.sum()), "1.00")
         }
     }
+
+    on("distance") {
+        it("should calculate dissimilarity of two vectors") {
+            assertEquals("%.2f".format(
+                twoValueFrame.distance(
+                    twoValueFrame.samples[0].values,
+                    twoValueFrame.samples[1].values
+                )
+            ), "1.29")
+        }
+    }
 })
