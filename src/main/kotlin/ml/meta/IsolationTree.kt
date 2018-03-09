@@ -1,13 +1,3 @@
-/*
-1) IsolationTree
-2) IsolationForest
-3) оценить на BankMarketing
-
-4) ArffM.parse снабдить параметром subsample (default = 1.0)
-
-https://insidebigdata.com/2016/11/11/how-to-use-isolation-forests-for-anomaly-detection/
-*/
-
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
 
