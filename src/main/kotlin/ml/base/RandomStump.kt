@@ -8,23 +8,20 @@ import java.util.concurrent.ThreadLocalRandom
 import taumechanica.ml.BinaryClassifier
 import taumechanica.ml.data.*
 
-class CRIndicator : BinaryClassifier {
+class RandomStump : BinaryClassifier {
     val index: Int
     val value: DoubleArray
 
     constructor(attr: Attribute) {
-        if (attr !is NominalAttribute) {
+        if (attr !is NumericAttribute) {
             throw Exception("Unexpected attribute type")
         }
 
-        val domain = attr.domain
-        val random = ThreadLocalRandom.current()
-
         index = attr.index
-        value = DoubleArray(domain.size, {
-            if (random.nextDouble() > 0.5) 1.0 else -1.0
-        })
+        value = doubleArrayOf(
+            ThreadLocalRandom.current().nextDouble(attr.minValue, attr.maxValue)
+        )
     }
 
-    override fun phi(values: DoubleArray) = value[values[index].toInt()].toInt()
+    override fun phi(values: DoubleArray) = if (values[index] > value[0]) 1 else -1
 }

@@ -4,13 +4,13 @@
 package taumechanica.ml.strong
 
 import taumechanica.ml.data.DataFrame
-import taumechanica.ml.meta.CRTree
+import taumechanica.ml.meta.RandomTree
 
-class CRForest {
-    val encoders: Array<CRTree>
+class EncodingForest {
+    val encoders: Array<RandomTree>
 
     constructor(frame: DataFrame, size: Int, complexity: Int) {
-        encoders = Array<CRTree>(size, { CRTree(frame, complexity) })
+        encoders = Array<RandomTree>(size, { RandomTree(frame, complexity) })
     }
 
     fun encode(values: DoubleArray, targetIndex: Int) = DoubleArray(

@@ -8,7 +8,7 @@ import kotlin.math.*
 import taumechanica.ml.Classifier
 import taumechanica.ml.data.DataFrame
 
-class HConst : Classifier {
+class HammingConst : Classifier {
     override val alpha: Double
     override val gamma: Double
 

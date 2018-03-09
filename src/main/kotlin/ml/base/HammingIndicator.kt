@@ -10,7 +10,7 @@ import kotlin.math.*
 import taumechanica.ml.Classifier
 import taumechanica.ml.data.*
 
-class HIndicator : Classifier {
+class HammingIndicator : Classifier {
     override val alpha: Double
     override val gamma: Double
 

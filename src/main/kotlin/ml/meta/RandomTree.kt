@@ -12,7 +12,7 @@ import taumechanica.ml.BinaryClassifier
 import taumechanica.ml.base.*
 import taumechanica.ml.data.*
 
-class CRTree {
+class RandomTree {
     val classifiers = arrayListOf<BinaryClassifier>()
 
     val lIndices = arrayListOf<Int>()
@@ -27,8 +27,8 @@ class CRTree {
             "Tree complexity should be greater or equals 1"
         )
 
-        var queue = ArrayDeque<CRQueueItem>()
-        queue.add(CRQueueItem(generate(frame), -1, 0))
+        var queue = ArrayDeque<RTQueueItem>()
+        queue.add(RTQueueItem(generate(frame), -1, 0))
 
         var iteration = 0
         while (true) {
@@ -48,7 +48,7 @@ class CRTree {
             if (iteration == complexity - 1) break
 
             for (direction in intArrayOf(-1, 1)) {
-                queue.add(CRQueueItem(generate(frame), iteration, direction))
+                queue.add(RTQueueItem(generate(frame), iteration, direction))
             }
 
             iteration++
@@ -82,7 +82,7 @@ class CRTree {
     }
 }
 
-private class CRQueueItem(
+private class RTQueueItem(
     val classifier: BinaryClassifier,
     val parent: Int,
     val direction: Int
@@ -91,8 +91,8 @@ private class CRQueueItem(
 private fun generate(frame: DataFrame): BinaryClassifier {
     var j = ThreadLocalRandom.current().nextInt(frame.features.size)
     return when (frame.features[j]) {
-        is NominalAttribute -> CRIndicator(frame.features[j])
-        is NumericAttribute -> CRStump(frame.features[j])
+        is NominalAttribute -> RandomIndicator(frame.features[j])
+        is NumericAttribute -> RandomStump(frame.features[j])
         else -> null
     }!!
 }

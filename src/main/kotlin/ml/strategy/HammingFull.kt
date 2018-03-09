@@ -7,17 +7,17 @@ import taumechanica.ml.*
 import taumechanica.ml.base.*
 import taumechanica.ml.data.*
 
-class HFull : Strategy {
+class HammingFull : Strategy {
     override fun init(frame: DataFrame) { }
 
     override fun fit(frame: DataFrame): Classifier {
-        val hconst = HConst(frame)
+        val hconst = HammingConst(frame)
         var result = hconst as Classifier
 
         for (feature in frame.features) {
             val candidate = when (feature) {
-                is NominalAttribute -> HIndicator(frame, feature)
-                is NumericAttribute -> HStump(frame, feature, hconst.edge)
+                is NominalAttribute -> HammingIndicator(frame, feature)
+                is NumericAttribute -> HammingStump(frame, feature, hconst.edge)
                 else -> null
             }
             candidate?.let {

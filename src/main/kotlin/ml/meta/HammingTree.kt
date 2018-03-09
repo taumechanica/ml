@@ -10,13 +10,14 @@ import kotlin.math.ln
 import taumechanica.ml.*
 import taumechanica.ml.data.DataFrame
 
-class HTree : Classifier {
+class HammingTree : Classifier {
     override val alpha: Double
     override val gamma: Double
 
     override val votes: DoubleArray
 
     val classifiers = arrayListOf<Classifier>()
+
     val lIndices = arrayListOf<Int>()
     val rIndices = arrayListOf<Int>()
 
@@ -27,10 +28,10 @@ class HTree : Classifier {
 
         votes = DoubleArray(frame.target.size, { 0.0 })
 
-        val queue = PriorityQueue<HQueueItem>(1, compareBy({ it.priority }))
+        val queue = PriorityQueue<HTQueueItem>(1, compareBy({ it.priority }))
 
         var classifier = strategy.fit(frame)
-        queue.add(HQueueItem(classifier, frame, classifier.gamma, -1, 0))
+        queue.add(HTQueueItem(classifier, frame, classifier.gamma, -1, 0))
 
         var iteration = 0
         var result = 0.0
@@ -58,7 +59,7 @@ class HTree : Classifier {
                 classifier = strategy.fit(cut)
 
                 val priority = classifier.gamma - edge(cut, item.classifier)
-                queue.add(HQueueItem(classifier, cut, priority, iteration, direction))
+                queue.add(HTQueueItem(classifier, cut, priority, iteration, direction))
             }
 
             iteration++
@@ -96,7 +97,7 @@ class HTree : Classifier {
     override fun phi(values: DoubleArray) = 0
 }
 
-private class HQueueItem(
+private class HTQueueItem(
     val classifier: Classifier,
     val frame: DataFrame,
     val priority: Double,

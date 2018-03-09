@@ -11,7 +11,7 @@ import taumechanica.ml.*
 import taumechanica.ml.base.*
 import taumechanica.ml.data.*
 
-class HRandom(val ratio: Double) : Strategy {
+class HammingRandom(val ratio: Double) : Strategy {
     override fun init(frame: DataFrame) {
         if (ratio <= 0.0 || ratio > 1.0) {
             throw Exception("Invalid subspace ratio")
@@ -19,7 +19,7 @@ class HRandom(val ratio: Double) : Strategy {
     }
 
     override fun fit(frame: DataFrame): Classifier {
-        val hconst = HConst(frame)
+        val hconst = HammingConst(frame)
         var result = hconst as Classifier
 
         val indices = mutableListOf<Int>()
@@ -30,8 +30,8 @@ class HRandom(val ratio: Double) : Strategy {
         for (j in 0 until size) {
             val feature = frame.features[j]
             val candidate = when (feature) {
-                is NominalAttribute -> HIndicator(frame, feature)
-                is NumericAttribute -> HStump(frame, feature, hconst.edge)
+                is NominalAttribute -> HammingIndicator(frame, feature)
+                is NumericAttribute -> HammingStump(frame, feature, hconst.edge)
                 else -> null
             }
             candidate?.let {

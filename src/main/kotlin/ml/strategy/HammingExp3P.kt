@@ -11,7 +11,7 @@ import taumechanica.ml.*
 import taumechanica.ml.base.*
 import taumechanica.ml.data.*
 
-class HExp3P(
+class HammingExp3P(
     val size: Int,
     val eta: Double = 0.3,
     val lambda: Double = 0.15
@@ -25,7 +25,7 @@ class HExp3P(
     }
 
     override fun fit(frame: DataFrame): Classifier {
-        val hconst = HConst(frame)
+        val hconst = HammingConst(frame)
         var result = hconst as Classifier
 
         var sum = 0.0
@@ -56,8 +56,8 @@ class HExp3P(
 
         val feature = frame.features[indices[left]]
         val candidate = when (feature) {
-            is NominalAttribute -> HIndicator(frame, feature)
-            is NumericAttribute -> HStump(frame, feature, hconst.edge)
+            is NominalAttribute -> HammingIndicator(frame, feature)
+            is NumericAttribute -> HammingStump(frame, feature, hconst.edge)
             else -> null
         }
         candidate?.let {

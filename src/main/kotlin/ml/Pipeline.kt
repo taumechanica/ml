@@ -6,11 +6,11 @@ package taumechanica.ml
 import java.io.InputStream
 
 import taumechanica.ml.data.*
-import taumechanica.ml.strong.CRForest
+import taumechanica.ml.strong.EncodingForest
 
 class Pipeline {
     var frame: DataFrame? = null
-    var encoders: MutableList<CRForest>? = null
+    var encoders: MutableList<EncodingForest>? = null
 
     fun parse(source: InputStream, separator: String = ";"): Pipeline {
         if (frame != null) throw Exception(
@@ -28,7 +28,7 @@ class Pipeline {
         )
 
         if (encoders == null) {
-            encoders = mutableListOf<CRForest>()
+            encoders = mutableListOf<EncodingForest>()
         }
 
         val features = Array<NominalAttribute>(size, {
@@ -39,7 +39,7 @@ class Pipeline {
             feature.size = complexity + 1
         }
 
-        val encoder = CRForest(frame!!, size, complexity)
+        val encoder = EncodingForest(frame!!, size, complexity)
         val samples = frame!!.samples.map { sample -> Sample(
             encoder.encode(sample.values, frame!!.target.index)
         ) }
