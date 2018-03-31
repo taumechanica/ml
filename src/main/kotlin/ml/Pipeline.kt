@@ -22,7 +22,7 @@ class Pipeline {
         return this
     }
 
-    fun encode(size: Int, complexity: Int): Pipeline {
+    fun encode(complexity: Int, extract: () -> IntArray?, size: Int = 0): Pipeline {
         if (frame == null) throw Exception(
             "Data frame has not been initialized"
         )
@@ -31,19 +31,21 @@ class Pipeline {
             encoders = mutableListOf<EncodingForest>()
         }
 
-        val features = Array<NominalAttribute>(size, {
+        val forest = EncodingForest(frame!!, complexity, extract, size)
+        val actualSize = forest.encoders.size
+
+        val samples = frame!!.samples.map { sample -> Sample(
+            forest.encode(sample.values, frame!!.target.index)
+        ) }
+        frame!!.target.index = actualSize
+
+        val features = Array<NominalAttribute>(actualSize, {
             NominalAttribute(it, it.toString())
         })
         for (feature in features) {
             feature.domain = DoubleArray(complexity + 1, { it.toDouble() })
             feature.size = complexity + 1
         }
-
-        val encoder = EncodingForest(frame!!, size, complexity)
-        val samples = frame!!.samples.map { sample -> Sample(
-            encoder.encode(sample.values, frame!!.target.index)
-        ) }
-        frame!!.target.index = size
 
         @Suppress("UNCHECKED_CAST")
         frame = DataFrame(
@@ -53,7 +55,7 @@ class Pipeline {
             BooleanArray(samples.size, { true })
         )
         frame!!.initialize()
-        encoders!!.add(encoder)
+        encoders!!.add(forest)
 
         return this
     }

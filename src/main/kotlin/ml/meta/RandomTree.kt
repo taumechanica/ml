@@ -22,13 +22,13 @@ class RandomTree {
     val lShift: Double
     val rShift: Double
 
-    constructor(frame: DataFrame, complexity: Int) {
+    constructor(frame: DataFrame, indices: IntArray, complexity: Int) {
         if (complexity < 1) throw Exception(
             "Tree complexity should be greater or equals 1"
         )
 
         var queue = ArrayDeque<RTQueueItem>()
-        queue.add(RTQueueItem(generate(frame), -1, 0))
+        queue.add(RTQueueItem(generate(frame, indices), -1, 0))
 
         var iteration = 0
         while (true) {
@@ -48,7 +48,7 @@ class RandomTree {
             if (iteration == complexity - 1) break
 
             for (direction in intArrayOf(-1, 1)) {
-                queue.add(RTQueueItem(generate(frame), iteration, direction))
+                queue.add(RTQueueItem(generate(frame, indices), iteration, direction))
             }
 
             iteration++
@@ -88,8 +88,8 @@ private class RTQueueItem(
     val direction: Int
 )
 
-private fun generate(frame: DataFrame): BinaryClassifier {
-    var j = ThreadLocalRandom.current().nextInt(frame.features.size)
+private fun generate(frame: DataFrame, indices: IntArray): BinaryClassifier {
+    var j = indices[ThreadLocalRandom.current().nextInt(indices.size)]
     return when (frame.features[j]) {
         is NominalAttribute -> RandomIndicator(frame.features[j])
         is NumericAttribute -> RandomStump(frame.features[j])

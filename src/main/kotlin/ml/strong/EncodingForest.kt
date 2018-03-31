@@ -9,8 +9,24 @@ import taumechanica.ml.meta.RandomTree
 class EncodingForest {
     val encoders: Array<RandomTree>
 
-    constructor(frame: DataFrame, size: Int, complexity: Int) {
-        encoders = Array<RandomTree>(size, { RandomTree(frame, complexity) })
+    constructor(
+        frame: DataFrame,
+        complexity: Int,
+        extract: () -> IntArray?,
+        size: Int = 0
+    ) {
+        encoders = if (size > 0) {
+            val indices = IntArray(frame.features.size, { it })
+            Array<RandomTree>(size, { RandomTree(frame, indices, complexity) })
+        } else {
+            var trees = mutableListOf<RandomTree>()
+            var indices = extract()
+            while (indices != null) {
+                trees.add(RandomTree(frame, indices, complexity))
+                indices = extract()
+            }
+            trees.toTypedArray()
+        }
     }
 
     fun encode(values: DoubleArray, targetIndex: Int) = DoubleArray(
