@@ -103,7 +103,8 @@ class DataFrame(
         for (feature in features) {
             sum += when (feature) {
                 is NominalAttribute -> if (first[feature.index] == second[feature.index]) 0.0 else 1.0
-                is NumericAttribute -> abs(first[feature.index] - second[feature.index]) / feature.valueRange
+                is NumericAttribute -> abs(first[feature.index] - second[feature.index]) /
+                    if (feature.valueRange == 0.0) 1.0 else feature.valueRange
                 else -> 0.0
             }
         }

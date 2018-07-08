@@ -21,6 +21,18 @@ fun accuracy(frame: DataFrame, model: Predictor): Double {
     return 100.0 * correct / total
 }
 
+fun rmsle(frame: DataFrame, model: Predictor): Double {
+    var total = 0
+    var sum = 0.0
+    for (i in 0 until frame.samples.size) if (frame.subset[i]) {
+        val sample = frame.samples[i]
+        val prediction = model.predict(sample.values)[0]
+        sum += (ln(prediction + 1.0) - ln(sample.values[frame.target.index] + 1.0)).pow(2.0)
+        total++
+    }
+    return (sum / total).pow(0.5)
+}
+
 fun logloss(frame: DataFrame, model: Predictor, calibrate: Boolean = true): Double {
     var total = 0
     var logloss = 0.0
